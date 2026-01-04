@@ -7,9 +7,7 @@
 
 <style>
 /* ===== RESET ===== */
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 /* ===== BODY ===== */
 body {
@@ -91,29 +89,44 @@ h1 {
   object-fit: cover;
 }
 
-/* ===== EYES IMAGE ===== */
+/* ===== EYES IMAGE (FULL VIEW + BLINK) ===== */
 .eyes {
-  width: min(650px, 42vw);
-  height: min(150px, 42vw);
-  border-radius: 50%;
-  margin: 22px auto;
-  overflow: hidden;
+  width: min(320px, 85vw);
+  margin: 24px auto;
   display: none;
-  box-shadow:
-    0 0 30px rgba(255,105,180,0.8),
-    0 0 60px rgba(255,105,180,0.5);
   animation: eyeReveal 1.4s ease forwards;
-}
-
-@keyframes eyeReveal {
-  from { opacity: 0; transform: scale(0.6); }
-  to { opacity: 1; transform: scale(1); }
+  filter:
+    drop-shadow(0 0 20px rgba(255,105,180,0.6))
+    drop-shadow(0 0 40px rgba(255,105,180,0.35));
 }
 
 .eyes img {
-  width: 50%;
-  height: 100%;
-  object-fit: cover;
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 16px;
+  animation: blink 7s infinite;
+}
+
+/* cinematic reveal */
+@keyframes eyeReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+/* subtle blink */
+@keyframes blink {
+  0%, 96%, 100% { transform: scaleY(1); }
+  97% { transform: scaleY(0.08); }
 }
 
 /* ===== TEXT ===== */
@@ -157,16 +170,10 @@ button:hover {
   font-size: 0.85rem;
 }
 
-/* ===== MOBILE OPTIMIZATION ===== */
+/* ===== MOBILE ===== */
 @media (max-width: 600px) {
-  .particle {
-    display: none;
-  }
-
-  .container {
-    padding: 30px 22px;
-    min-height: 500px;
-  }
+  .particle { display: none; }
+  .container { padding: 30px 22px; }
 }
 </style>
 </head>
@@ -181,7 +188,6 @@ button:hover {
 <!-- PARTICLES -->
 <script>
 const particleCount = window.innerWidth < 600 ? 0 : 40;
-
 for (let i = 0; i < particleCount; i++) {
   const p = document.createElement("div");
   p.className = "particle";
@@ -207,17 +213,16 @@ for (let i = 0; i < particleCount; i++) {
   </div>
 
   <p id="text">Some birthdays deserve more than wishes.</p>
-
   <button id="btn">Keep Going</button>
 </div>
 
 <script>
 const messages = [
   "My special one, today isn’t loud — it’s meaningful. A pause in time that quietly belongs to you.",
-  "You move through moments with a strange balance — calm on the surface, mischief just underneath. Drama Factory, occasionally.",
-  "And then there are your eyes. Not the kind that ask to be noticed — the kind that notice first. They carry silence like it knows your name.",
-  "Distance sharpens things like that. It makes certain details return with more weight, more honesty.",
-  "So this is me leaving something here — no pressure, no expectations. Just a moment. Happy Birthday."
+  "You move through moments with a strange balance — calm on the surface, mischief just underneath.",
+  "And then there are your eyes. Not the kind that ask to be noticed — the kind that notice first.",
+  "Distance sharpens things like that. Details return with more honesty.",
+  "So this is me leaving something here — just a moment. Happy Birthday."
 ];
 
 let i = 0;
@@ -234,16 +239,12 @@ music.volume = 0;
 
 function fadeInMusic() {
   const interval = setInterval(() => {
-    if (music.volume < 0.5) {
-      music.volume += 0.02;
-    } else {
-      clearInterval(interval);
-    }
+    if (music.volume < 0.5) music.volume += 0.02;
+    else clearInterval(interval);
   }, 200);
 }
 
 btn.addEventListener("click", () => {
-
   if (!musicStarted) {
     music.play();
     fadeInMusic();
@@ -252,7 +253,6 @@ btn.addEventListener("click", () => {
 
   if (i < messages.length) {
     text.style.opacity = 0;
-
     setTimeout(() => {
       text.innerText = messages[i];
       text.style.opacity = 1;
@@ -266,7 +266,6 @@ btn.addEventListener("click", () => {
       }
 
       i++;
-
       if (i === messages.length) {
         btn.innerText = "That’s it ✨";
         btn.disabled = true;
